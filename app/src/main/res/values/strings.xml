@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">KeyboardDemo</string>
+
+    <string name="keyboard_key_and">"&#64;"</string>
+    <string name="keyboard_key_at">"&#38;"</string>
+    <string name="keyboard_key_quotation">\"</string>
+    <string name="keyboard_key_left">"&#60;"</string>
+    <string name="keyboard_key_right">"&#62;"</string>
+
+</resources>

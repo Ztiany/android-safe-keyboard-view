@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:id="@+id/ekbFlKeyboardTitle"
+        android:padding="10dp"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/ekbTvKeyboardTitle"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </FrameLayout>
+
+    <me.ztiany.safekb.CustomKeyboardView
+        android:id="@+id/ekbKvKeyboardTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:paddingStart="1dp"
+        android:paddingEnd="1dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="2dp"
+        android:focusableInTouchMode="true" />
+
+</LinearLayout>
