@@ -4,6 +4,7 @@
     <attr name="xmlLayoutResId" format="reference" />
     <attr name="keyboardBgColor" format="color|reference" />
     <attr name="isRandom" format="boolean" />
+    <attr name="disableCopyAndPaste" format="boolean" />
     <attr name="keyDrawable" format="reference" />
     <attr name="keyboardTextColor" format="color|reference" />
     <attr name="keyboardTextSize" format="dimension|reference" />
@@ -30,6 +31,7 @@
     <declare-styleable name="SystemKeyboardEditText">
         <attr name="xmlLayoutResId" />
         <attr name="isRandom" />
+        <attr name="disableCopyAndPaste" />
 
         <attr name="keyDrawable" />
         <attr name="keyboardBgColor" />

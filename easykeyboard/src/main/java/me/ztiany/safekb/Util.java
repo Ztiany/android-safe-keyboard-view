@@ -2,58 +2,98 @@ package me.ztiany.safekb;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.inputmethodservice.Keyboard;
 import android.os.Build;
-import android.os.SystemClock;
-import android.util.DisplayMetrics;
-import android.view.Display;
+import android.support.v4.app.FragmentActivity;
+import android.text.InputType;
+import android.text.TextUtils;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
+import java.util.regex.Pattern;
 
 class Util {
 
-    static int dpToPx(Context context, float dp) {
-        final float scale = context.getResources().getDisplayMetrics().density;
-        return (int) (dp * scale + 0.5f);
-    }
+    private static final String LETTERS_REG = "^[a-zA-Z]+$";
+
+    private static final String DIGITAL_REG = "^[0-9]+$";
 
     static int spToPx(Context context, float sp) {
         final float scale = context.getResources().getDisplayMetrics().scaledDensity;
         return (int) (sp * scale + 0.5f);
     }
 
-    private static boolean isNumeric(String str) {
-        for (int i = 0; i < str.length(); i++) {
-            if (!Character.isDigit(str.charAt(i))) {
-                return false;
-            }
+    /**
+     * 获取状态栏高度
+     */
+    @SuppressWarnings("WeakerAccess,unused")
+    public static int getStatusBarHeight(Context context) {
+        int result = 0;
+        int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = context.getResources().getDimensionPixelSize(resourceId);
         }
-        return true;
+        return result;
     }
 
     /**
      * 禁止EditText弹出软件盘，光标依然正常显示，并且能正常选取光标。
+     * <pre>
+     *     1. 3.0 以下版本可以用 editText.setInputType(InputType.TYPE_NULL) 来实现。（但是在4.0的测试系统来看，使用 editText.setInputType(InputType.TYPE_NULL) 方法能隐藏键盘，但是光标也会隐藏，所以无法使用。）
+     *     2. 3.0 及以上版本除了调用隐藏方法 setSoftInputShownOnFocus(false)。
+     *     3. 到 4.2 系统对应设置的是 setSoftInputShownOnFocus 方法改为 setShowSoftInputOnFocus(false)。
+     * </pre>
+     *
+     * @see <a href='https://www.zhangbj.com/p/168.html'>Android禁止EditText弹出软件盘</>
      */
     static void disableShowSoftInput(EditText editText) {
-        Class<EditText> cls = EditText.class;
-        Method method;
-        try {
-            method = cls.getMethod("setShowSoftInputOnFocus", boolean.class);
-            method.setAccessible(true);
-            method.invoke(editText, false);
-        } catch (Exception e) {
-            e.printStackTrace();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            editText.setShowSoftInputOnFocus(false);
+            return;
         }
+
+        int currentVersion = Build.VERSION.SDK_INT;
+        String methodName = null;
+
+        if (currentVersion >= Build.VERSION_CODES.JELLY_BEAN) {// 4.2
+            methodName = "setShowSoftInputOnFocus";
+        } else if (currentVersion >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {// 4.0
+            methodName = "setSoftInputShownOnFocus";
+        }
+
+        if (methodName == null) {
+            editText.setInputType(InputType.TYPE_NULL);
+        } else {
+            Class<EditText> cls = EditText.class;
+            Method setShowSoftInputOnFocus;
+            try {
+                setShowSoftInputOnFocus = cls.getMethod(methodName, boolean.class);
+                setShowSoftInputOnFocus.setAccessible(true);
+                setShowSoftInputOnFocus.invoke(editText, false);
+            } catch (NoSuchMethodException e) {
+                editText.setInputType(InputType.TYPE_NULL);
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    static Activity getRealContext(Context context) {
+        if (context instanceof Activity) {
+            return (Activity) context;
+        }
+        while (context instanceof android.content.ContextWrapper) {
+            if (context instanceof FragmentActivity) {
+                return (Activity) context;
+            }
+            context = ((ContextWrapper) context).getBaseContext();
+        }
+        return null;
     }
 
     /**
@@ -82,59 +122,6 @@ class Util {
         }
     }
 
-    /**
-     * 获取实际内容高度
-     */
-    static int getContentHeight(Context context) {
-        int screen_h_navigator_bar = 0;
-
-        DisplayMetrics dMetrics = new DisplayMetrics();
-        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        if (windowManager != null) {
-            Display display = windowManager.getDefaultDisplay();
-            display.getMetrics(dMetrics);
-            screen_h_navigator_bar = dMetrics.heightPixels;
-
-            int ver = Build.VERSION.SDK_INT;
-
-            // 新版本的android 系统有导航栏，造成无法正确获取高度
-            if (ver == 13) {
-                try {
-                    Method mt = display.getClass().getMethod("getRealHeight");
-                    screen_h_navigator_bar = (Integer) mt.invoke(display);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            } else if (ver > 13) {
-                try {
-                    Method mt = display.getClass().getMethod("getRawHeight");
-                    screen_h_navigator_bar = (Integer) mt.invoke(display);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return screen_h_navigator_bar - getStatusBarHeight(context);
-    }
-
-    static int getStatusBarHeight(Context context) {
-        Class<?> c;
-        Object obj;
-        Field field;
-        int x;
-        int bar = 0;
-        try {
-            c = Class.forName("com.android.internal.R$dimen");
-            obj = c.newInstance();
-            field = c.getField("status_bar_height");
-            x = Integer.parseInt(field.get(obj).toString());
-            bar = context.getResources().getDimensionPixelSize(x);
-        } catch (Exception e1) {
-            e1.printStackTrace();
-        }
-        return bar;
-    }
-
     static void checkNull(Object object, String info) {
         if (object == null) {
             throw new NullPointerException(info);
@@ -142,35 +129,15 @@ class Util {
     }
 
     static void randomKey(Keyboard keyboard) {
-        List<Keyboard.Key> keyList = keyboard.getKeys();
-        List<Keyboard.Key> newKeyList = new ArrayList<>();
-        for (int i = 0, size = keyList.size(); i < size; i++) {
-            Keyboard.Key key = keyList.get(i);
-            CharSequence label = key.label;
-            if (label != null && Util.isNumeric(label.toString())) {
-                newKeyList.add(key);
-            }
-        }
-        int count = newKeyList.size();
-        List<KeyModel> resultList = new ArrayList<>();
-        LinkedList<KeyModel> temp = new LinkedList<>();
-        for (int i = 0; i < count; i++) {
-            temp.add(new KeyModel(48 + i, i + ""));
-        }
-        Random rand = new SecureRandom();
-        rand.setSeed(SystemClock.currentThreadTimeMillis());
-        for (int i = 0; i < count; i++) {
-            int num = rand.nextInt(count - i);
-            KeyModel model = temp.get(num);
-            resultList.add(new KeyModel(model.getCode(), model.getLabel()));
-            temp.remove(num);
-        }
-        for (int i = 0; i < count; i++) {
-            Keyboard.Key newKey = newKeyList.get(i);
-            KeyModel resultModel = resultList.get(i);
-            newKey.label = resultModel.getLabel();
-            newKey.codes[0] = resultModel.getCode();
-        }
+        //todo
+    }
+
+    private static boolean isNumeric(String text) {
+        return !TextUtils.isEmpty(text) && Pattern.matches(DIGITAL_REG, text);
+    }
+
+    private static boolean isLetter(String text) {
+        return !TextUtils.isEmpty(text) && Pattern.matches(LETTERS_REG, text);
     }
 
 }

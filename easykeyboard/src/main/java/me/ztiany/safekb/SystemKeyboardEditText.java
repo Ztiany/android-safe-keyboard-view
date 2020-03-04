@@ -142,6 +142,11 @@ public class SystemKeyboardEditText extends KeyboardEditText {
         mKeyboardLayout.setKeyboardTitleColor(titleColor);
         mKeyboardLayout.setKeyboardTitleBgColor(titleBgColor);
 
+        boolean disableCopyAndPaste = typedArray.getBoolean(R.styleable.SystemKeyboardEditText_disableCopyAndPaste, false);
+        if (disableCopyAndPaste) {
+            removeCopyAndPaste();
+        }
+
         typedArray.recycle();
     }
 

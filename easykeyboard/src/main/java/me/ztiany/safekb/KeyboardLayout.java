@@ -1,5 +1,6 @@
 package me.ztiany.safekb;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
@@ -13,6 +14,7 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -46,6 +48,10 @@ public class KeyboardLayout extends FrameLayout {
 
     public KeyboardLayout(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        Activity realContext = Util.getRealContext(context);
+        if (realContext != null) {
+            realContext.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        }
         initKeyBoardView(context);
         parseAttributes(context, attrs);
         setupKeyboard(getCurrentKeyboard());

@@ -19,6 +19,7 @@
         </activity>
         <activity android:name=".SystemKeyboardActivity"/>
         <activity android:name=".SystemKeyboardEditTextActivity"/>
+        <activity android:name=".OtherWayActivity"/>
     </application>
 
 </manifest>

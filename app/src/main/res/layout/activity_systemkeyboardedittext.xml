@@ -3,38 +3,53 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:keyboard="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_main"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <me.ztiany.safekb.SystemKeyboardEditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        keyboard:keyboardTitle="安全键盘"
         android:layout_margin="10dp"
         android:padding="10dp"
+        keyboard:keyboardTitle="安全键盘"
         keyboard:xmlLayoutResId="@xml/keyboard_letter_upper_case" />
 
     <me.ztiany.safekb.SystemKeyboardEditText
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:layout_gravity="bottom"
         android:layout_margin="10dp"
+        android:layout_marginBottom="10dp"
         android:padding="10dp"
         keyboard:keyboardTitle="安全键盘"
-        android:layout_gravity="bottom"
-        android:layout_marginBottom="10dp"
         keyboard:xmlLayoutResId="@xml/keyboard_letter_lower_case" />
 
     <me.ztiany.safekb.SystemKeyboardEditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        keyboard:keyboardTitle="安全键盘"
         android:layout_margin="10dp"
         android:padding="10dp"
+        keyboard:keyboardTitle="安全键盘"
         keyboard:xmlLayoutResId="@xml/keyboard_symbol" />
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
+    <android.support.v4.widget.Space
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <me.ztiany.safekb.SystemKeyboardEditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:padding="10dp"
+        keyboard:disableCopyAndPaste="true"
+        keyboard:isRandom="true"
+        keyboard:keyboardTitle="安全键盘"
+        keyboard:xmlLayoutResId="@xml/keyboard_letter_lower_case" />
 
 </LinearLayout>

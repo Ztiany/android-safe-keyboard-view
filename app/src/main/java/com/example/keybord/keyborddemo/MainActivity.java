@@ -16,7 +16,7 @@ public class MainActivity extends ListActivity {
 
         KeyboardManager.configKeyboardMapper(new BHKeyboardMapper());
 
-        String[] type = new String[]{"SystemKeyboard", "SystemKeyBoardEditText"};
+        String[] type = new String[]{"SystemKeyboard", "SystemKeyBoardEditText", "Other Way"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, type);
         setListAdapter(adapter);
     }
@@ -30,6 +30,9 @@ public class MainActivity extends ListActivity {
                 break;
             case 1:
                 startActivity(SystemKeyboardEditTextActivity.class);
+                break;
+            case 2:
+                startActivity(OtherWayActivity.class);
                 break;
         }
     }

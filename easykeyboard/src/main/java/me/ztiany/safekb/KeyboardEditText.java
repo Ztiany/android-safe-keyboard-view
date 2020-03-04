@@ -2,10 +2,11 @@ package me.ztiany.safekb;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Rect;
 import android.support.v7.widget.AppCompatEditText;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.view.ActionMode;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,7 +27,7 @@ public abstract class KeyboardEditText extends AppCompatEditText {
     /**
      * 界面实际高度
      */
-    private int realHeight;
+    private int appContentHeight;
 
     private PopupWindow mKeyboardWindow;
     private View mDecorView;
@@ -53,11 +54,26 @@ public abstract class KeyboardEditText extends AppCompatEditText {
             activity = (Activity) context;
         }
 
-        realHeight = Util.getContentHeight(context);
+        appContentHeight = getAppContentHeight();
+
         this.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
         if (this.getText() != null) {
             this.setSelection(this.getText().length());
         }
+    }
+
+    private int getAppContentHeight() {
+        int appContentHeight = 0;
+
+        DisplayMetrics dMetrics = new DisplayMetrics();
+        WindowManager windowManager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
+
+        if (windowManager != null) {
+            Display display = windowManager.getDefaultDisplay();
+            display.getMetrics(dMetrics);
+            appContentHeight = dMetrics.heightPixels;
+        }
+        return appContentHeight;
     }
 
     /**
@@ -98,22 +114,30 @@ public abstract class KeyboardEditText extends AppCompatEditText {
         if (null != mKeyboardWindow) {
             if (!mKeyboardWindow.isShowing()) {
                 mKeyboardWindow.showAtLocation(this.mDecorView, Gravity.BOTTOM, 0, 0);
-                if (null != mDecorView && null != mContentView) {
-                    final View popContentView = mKeyboardWindow.getContentView();
-                    popContentView.post(() -> {
-                        int[] pos = new int[2];
-                        getLocationOnScreen(pos);
-                        float height = popContentView.getMeasuredHeight();
-                        Rect outRect = new Rect();
-                        mDecorView.getWindowVisibleDisplayFrame(outRect);
-                        int screen = realHeight;
-                        mDifference = (int) ((pos[1] + getMeasuredHeight() - outRect.top) - (screen - height));
-                        if (mDifference > 0) {
-                            mContentView.scrollBy(0, mDifference);
-                        }
-                    });
-                }
+                adjustPositionForSuitingKeyboard();
             }
+        }
+    }
+
+    private void adjustPositionForSuitingKeyboard() {
+        if (null != mDecorView && null != mContentView) {
+            final View popContentView = mKeyboardWindow.getContentView();
+            popContentView.post(() -> {
+
+                //EditText 处于底部的高度
+                int[] pos = new int[2];
+                getLocationOnScreen(pos);
+                int editTextBottom = pos[1] + getMeasuredHeight();
+
+                //自定义键盘弹出后剩余的展示高度
+                float remainingDisplayHeightAfterKeyboardShown = (appContentHeight - popContentView.getMeasuredHeight());
+
+                mDifference = (int) (editTextBottom - remainingDisplayHeightAfterKeyboardShown);
+
+                if (mDifference > 0) {
+                    mContentView.scrollBy(0, mDifference);
+                }
+            });
         }
     }
 
