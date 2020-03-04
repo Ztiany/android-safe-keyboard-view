@@ -62,6 +62,9 @@ public abstract class KeyboardEditText extends AppCompatEditText {
         }
     }
 
+    /**
+     * @see <a href='https://developer.android.com/reference/android/view/Display'>Display</a>
+     */
     private int getAppContentHeight() {
         int appContentHeight = 0;
 

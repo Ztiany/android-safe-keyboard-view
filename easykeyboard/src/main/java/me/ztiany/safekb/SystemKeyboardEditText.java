@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -28,13 +27,7 @@ public class SystemKeyboardEditText extends KeyboardEditText {
     private KeyboardLayout mKeyboardLayout;
     private CoreOnKeyboardActionListener mCoreOnKeyboardActionListener;
     private OnFocusChangeListener mSpareFocusChangeListener;
-
-    private int focusMark;
-    private static final int READY = 0X110;
-    private static final int START = 0X111;
-    private int STATUE;
-
-    private Handler mHandler = new Handler();
+    private OnFocusChangeListener mInternalFocusChangeListener;
 
     public SystemKeyboardEditText(Context context) {
         super(context);
@@ -82,28 +75,17 @@ public class SystemKeyboardEditText extends KeyboardEditText {
             return false;
         });
 
-        STATUE = READY;
-
-        setOnFocusChangeListener((v, hasFocus) -> {
-
+        mInternalFocusChangeListener = (v, hasFocus) -> {
             //根据焦点变化判断外部点击区域
-            focusMark++;
-            if (STATUE == READY) {
-                mHandler.postDelayed(() -> {
-                    if (STATUE == START) {
-                        if (focusMark == 1 && !hasFocus) {
-                            dismissKeyboardWindow();
-                        }
-                        STATUE = READY;
-                        focusMark = 0;
-                    }
-                }, 200);
-                STATUE = START;
+            if (!hasFocus) {
+                dismissKeyboardWindow();
             }
+
             if (mSpareFocusChangeListener != null) {
                 mSpareFocusChangeListener.onFocusChange(v, hasFocus);
             }
-        });
+        };
+        setOnFocusChangeListener(mInternalFocusChangeListener);
     }
 
     private void initKeyboardView(Context context) {
@@ -184,6 +166,13 @@ public class SystemKeyboardEditText extends KeyboardEditText {
 
     public void setSpareFocusChangeListener(OnFocusChangeListener focusChangeListener) {
         this.mSpareFocusChangeListener = focusChangeListener;
+    }
+
+    @Override
+    public void setOnFocusChangeListener(OnFocusChangeListener l) {
+        if (l == mInternalFocusChangeListener) {
+            super.setOnFocusChangeListener(l);
+        }
     }
 
 }
