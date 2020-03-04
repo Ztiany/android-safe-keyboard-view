@@ -69,15 +69,12 @@ public abstract class KeyboardEditText extends AppCompatEditText {
         mKeyboardWindow = new PopupWindow(contentView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         mKeyboardWindow.setAnimationStyle(R.style.AnimationFade);
         mKeyboardWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-        mKeyboardWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
-            @Override
-            public void onDismiss() {
-                if (mDifference > 0) {
-                    int temp = mDifference;
-                    mDifference = 0;
-                    if (null != mContentView) {
-                        mContentView.scrollBy(0, -temp);
-                    }
+        mKeyboardWindow.setOnDismissListener(() -> {
+            if (mDifference > 0) {
+                int temp = mDifference;
+                mDifference = 0;
+                if (null != mContentView) {
+                    mContentView.scrollBy(0, -temp);
                 }
             }
         });
@@ -103,19 +100,16 @@ public abstract class KeyboardEditText extends AppCompatEditText {
                 mKeyboardWindow.showAtLocation(this.mDecorView, Gravity.BOTTOM, 0, 0);
                 if (null != mDecorView && null != mContentView) {
                     final View popContentView = mKeyboardWindow.getContentView();
-                    popContentView.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            int[] pos = new int[2];
-                            getLocationOnScreen(pos);
-                            float height = popContentView.getMeasuredHeight();
-                            Rect outRect = new Rect();
-                            mDecorView.getWindowVisibleDisplayFrame(outRect);
-                            int screen = realHeight;
-                            mDifference = (int) ((pos[1] + getMeasuredHeight() - outRect.top) - (screen - height));
-                            if (mDifference > 0) {
-                                mContentView.scrollBy(0, mDifference);
-                            }
+                    popContentView.post(() -> {
+                        int[] pos = new int[2];
+                        getLocationOnScreen(pos);
+                        float height = popContentView.getMeasuredHeight();
+                        Rect outRect = new Rect();
+                        mDecorView.getWindowVisibleDisplayFrame(outRect);
+                        int screen = realHeight;
+                        mDifference = (int) ((pos[1] + getMeasuredHeight() - outRect.top) - (screen - height));
+                        if (mDifference > 0) {
+                            mContentView.scrollBy(0, mDifference);
                         }
                     });
                 }

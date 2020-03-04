@@ -7,10 +7,8 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
-import android.view.View;
 
 /**
  * 说明：附带键盘弹出的EditText
@@ -59,63 +57,51 @@ public class SystemKeyboardEditText extends KeyboardEditText {
         initListener();
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void initListener() {
-        setOnTouchListener(new OnTouchListener() {
-            @SuppressLint("ClickableViewAccessibility")
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (!isShowing()) {
-                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                        if (focusEnable) {
-                            requestFocus();
-                            requestFocusFromTouch();
-                            if (enable) {
-                                Util.hideKeyboard(getContext());
-                                Util.disableShowSoftInput(SystemKeyboardEditText.this);
-                                showKeyboardWindow();
-                            }
-                        } else {
-                            dismissKeyboardWindow();
+        setOnTouchListener((v, event) -> {
+            if (!isShowing()) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    if (focusEnable) {
+                        requestFocus();
+                        requestFocusFromTouch();
+                        if (enable) {
+                            Util.hideKeyboard(getContext());
                             Util.disableShowSoftInput(SystemKeyboardEditText.this);
+                            showKeyboardWindow();
                         }
+                    } else {
+                        dismissKeyboardWindow();
+                        Util.disableShowSoftInput(SystemKeyboardEditText.this);
                     }
-                } else {
-                    requestFocus();
-                    requestFocusFromTouch();
                 }
-                return false;
+            } else {
+                requestFocus();
+                requestFocusFromTouch();
             }
+            return false;
         });
 
         STATUE = READY;
 
-        setOnFocusChangeListener(new OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, final boolean hasFocus) {
+        setOnFocusChangeListener((v, hasFocus) -> {
 
-                Log.d("TAGA", "v = " + v);
-                Log.d("TAGA", "hasFocus = " + hasFocus);
-
-                //根据焦点变化判断外部点击区域
-                focusMark++;
-                if (STATUE == READY) {
-                    mHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (STATUE == START) {
-                                if (focusMark == 1 && !hasFocus) {
-                                    dismissKeyboardWindow();
-                                }
-                                STATUE = READY;
-                                focusMark = 0;
-                            }
+            //根据焦点变化判断外部点击区域
+            focusMark++;
+            if (STATUE == READY) {
+                mHandler.postDelayed(() -> {
+                    if (STATUE == START) {
+                        if (focusMark == 1 && !hasFocus) {
+                            dismissKeyboardWindow();
                         }
-                    }, 200);
-                    STATUE = START;
-                }
-                if (mSpareFocusChangeListener != null) {
-                    mSpareFocusChangeListener.onFocusChange(v, hasFocus);
-                }
+                        STATUE = READY;
+                        focusMark = 0;
+                    }
+                }, 200);
+                STATUE = START;
+            }
+            if (mSpareFocusChangeListener != null) {
+                mSpareFocusChangeListener.onFocusChange(v, hasFocus);
             }
         });
     }

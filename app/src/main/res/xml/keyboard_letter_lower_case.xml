@@ -1,9 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Keyboard xmlns:android="http://schemas.android.com/apk/res/android"
-    android:keyWidth="8.5%p"
-    android:keyHeight="6.5%p"
+<Keyboard
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:horizontalGap="1.4%p"
+    android:keyWidth="8.5%p"
+    android:keyHeight="6%p"
     android:verticalGap="1.2%p">
+
+    <Row>
+        <Key
+            android:codes="49"
+            android:keyEdgeFlags="left"
+            android:keyLabel="1" />
+        <Key
+            android:codes="50"
+            android:keyLabel="2" />
+        <Key
+            android:codes="51"
+            android:keyLabel="3" />
+        <Key
+            android:codes="52"
+            android:keyLabel="4" />
+        <Key
+            android:codes="53"
+            android:keyLabel="5" />
+        <Key
+            android:codes="54"
+            android:keyLabel="6" />
+        <Key
+            android:codes="55"
+            android:keyLabel="7" />
+        <Key
+            android:codes="56"
+            android:keyLabel="8" />
+        <Key
+            android:codes="57"
+            android:keyLabel="9" />
+        <Key
+            android:codes="48"
+            android:keyEdgeFlags="right"
+            android:keyLabel="0" />
+    </Row>
 
     <Row>
         <Key
@@ -21,8 +57,8 @@
             android:keyLabel="r" />
         <Key
             android:codes="116"
-            android:keyLabel="t"
-            android:keyWidth="8.9%p" />
+            android:keyWidth="8.9%p"
+            android:keyLabel="t" />
         <Key
             android:codes="121"
             android:keyLabel="y" />
@@ -79,9 +115,9 @@
             android:codes="20200221"
             android:isModifier="true"
             android:isSticky="true"
+            android:keyWidth="13%p"
             android:keyEdgeFlags="left"
-            android:keyLabel="大写"
-            android:keyWidth="13%p" />
+            android:keyLabel="大写" />
         <Key
             android:codes="122"
             android:keyLabel="z" />
@@ -106,37 +142,37 @@
         <Key
             android:codes="-5"
             android:isRepeatable="true"
-            android:keyLabel="删除"
-            android:keyWidth="13%p" />
+            android:keyWidth="13%p"
+            android:keyLabel="删除" />
     </Row>
 
     <Row android:rowEdgeFlags="bottom">
 
         <Key
-            android:keyWidth="15%p"
             android:codes="20200223"
             android:horizontalGap="2.5%p"
+            android:keyWidth="15%p"
             android:keyLabel="12#" />
 
         <Key
-            android:keyWidth="15%p"
             android:codes="44"
+            android:keyWidth="15%p"
             android:keyLabel="," />
 
         <Key
-            android:keyWidth="30%p"
             android:codes="32"
             android:isRepeatable="true"
+            android:keyWidth="30%p"
             android:keyLabel="空格" />
 
         <Key
-            android:keyWidth="15%p"
             android:codes="46"
+            android:keyWidth="15%p"
             android:keyLabel="." />
 
         <Key
-            android:keyWidth="15%p"
             android:codes="-4"
+            android:keyWidth="15%p"
             android:keyEdgeFlags="right"
             android:keyLabel="完成" />
 

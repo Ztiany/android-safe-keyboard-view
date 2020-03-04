@@ -40,7 +40,6 @@ public class CustomKeyboardView extends KeyboardView {
         mPaint.setTextSize(Util.spToPx(getContext(), 16));
     }
 
-
     @Override
     public void onDraw(Canvas canvas) {
         List<Keyboard.Key> keys = getKeyboard().getKeys();
