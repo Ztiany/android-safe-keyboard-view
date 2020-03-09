@@ -26,13 +26,23 @@
             android:hint="点我弹出原生键盘"
             android:id="@+id/edit2" />
 
-        <Button
+        <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="随机键盘"
-            android:id="@+id/btn_random"
-            android:textSize="16sp"
-            android:layout_marginTop="10dp" />
+            android:hint="点我弹出原生键盘"
+            android:id="@+id/edit3" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="点我弹出原生键盘"
+            android:id="@+id/edit4" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="点我弹出原生键盘"
+            android:id="@+id/edit5" />
 
     </LinearLayout>
 

@@ -113,7 +113,11 @@ class Util {
      * 隐藏软键盘
      */
     static void hideKeyboard(Context context) {
-        View view = ((Activity) context).getWindow().peekDecorView();
+        Activity realContext = getRealContext(context);
+        if (realContext == null) {
+            return;
+        }
+        View view = realContext.getWindow().peekDecorView();
         if (view != null) {
             InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
             if (imm != null) {

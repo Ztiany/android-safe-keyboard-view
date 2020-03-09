@@ -50,10 +50,7 @@ public abstract class KeyboardEditText extends AppCompatEditText {
     }
 
     private void init(Context context) {
-        if (context instanceof Activity) {
-            activity = (Activity) context;
-        }
-
+        activity = Util.getRealContext(context);
         appContentHeight = getAppContentHeight();
 
         this.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);

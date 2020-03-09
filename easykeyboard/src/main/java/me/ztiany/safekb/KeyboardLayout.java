@@ -1,5 +1,6 @@
 package me.ztiany.safekb;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -7,11 +8,11 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.inputmethodservice.Keyboard;
 import android.support.annotation.ColorInt;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.TypedValue;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -23,19 +24,24 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+
 /**
  * 说明：使用系统API实现的键盘
  */
 public class KeyboardLayout extends FrameLayout {
 
     private CustomKeyboardView mKeyboardView;
+
     private boolean mIsRandom;
 
     private CoreOnKeyboardActionListener mCoreOnKeyboardActionListener;
 
     private Map<Integer, Keyboard> mKeyboards = new HashMap<>();
+
     private int mCurrentKeyboardRes;
+
     private FrameLayout mKeyboardTitleContainer;
+
     private TextView mKeyboardTitle;
 
     public KeyboardLayout(Context context) {
@@ -212,38 +218,43 @@ public class KeyboardLayout extends FrameLayout {
         mKeyboardView.setKeyDrawable(keyDrawable);
     }
 
-    /**
-     * 建立与EditText的绑定关系，用于控制输入值
-     *
-     * @param editText 绑定EditText 默认显示自定义键盘
-     */
-    public void setEditText(@NonNull EditText editText) {
-        setEditText(editText, false);
+    public void bindEditTextArray(EditText... texts) {
+        for (EditText editText : texts) {
+            setListener(editText);
+        }
     }
 
-    /**
-     * 建立与EditText的绑定关系，用于控制输入值
-     *
-     * @param editText             需要绑定的EditText
-     * @param isOpenNativeKeyBoard 是否打开原生键盘
-     */
-    public void setEditText(@NonNull EditText editText, boolean isOpenNativeKeyBoard) {
-        Util.checkNull(mCoreOnKeyboardActionListener, "Please check if xmlLayoutResId is set");
-        mCoreOnKeyboardActionListener.setEditText(editText);
-        if (isOpenNativeKeyBoard) {
-            Util.showKeyboard(editText);
-            setVisibility(GONE);
-        } else {
-            setVisibility(VISIBLE);
-            Util.disableShowSoftInput(editText);
-            Util.hideKeyboard(editText.getContext());
-        }
+    @SuppressLint("ClickableViewAccessibility")
+    private void setListener(EditText editText) {
+        Util.disableShowSoftInput(editText);
+
+        editText.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                setVisibility(GONE);
+            } else {
+                mCoreOnKeyboardActionListener.setEditText((EditText) v);
+                Util.hideKeyboard(editText.getContext());
+                setVisibility(VISIBLE);
+            }
+        });
+
+        editText.setOnKeyListener((v, keyCode, event) -> {
+            if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    if (getVisibility() == VISIBLE) {
+                        setVisibility(GONE);
+                        return true;
+                    }
+                }
+            }
+            return false;
+        });
     }
 
     /**
      * 设置键盘输入监听
      *
-     * @param listener l
+     * @param listener listener
      */
     public void setOnKeyboardActionListener(KeyBoardActionListener listener) {
         mCoreOnKeyboardActionListener.setKeyActionListener(listener);
