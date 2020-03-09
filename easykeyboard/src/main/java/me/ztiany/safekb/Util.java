@@ -8,6 +8,9 @@ import android.os.Build;
 import android.support.v4.app.FragmentActivity;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.view.ActionMode;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -143,5 +146,35 @@ class Util {
     private static boolean isLetter(String text) {
         return !TextUtils.isEmpty(text) && Pattern.matches(LETTERS_REG, text);
     }
+
+    /**
+     * 屏蔽EditText长按复制功能，启用后粘贴功能也会失效
+     */
+    public static void removeCopyAndPaste(EditText editText) {
+        editText.setCustomSelectionActionModeCallback(new ActionMode.Callback() {
+
+            @Override
+            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                return false;
+            }
+
+            @Override
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                return false;
+            }
+
+            @Override
+            public void onDestroyActionMode(ActionMode mode) {
+
+            }
+
+            @Override
+            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                return false;
+            }
+        });
+        editText.setLongClickable(false);
+    }
+
 
 }

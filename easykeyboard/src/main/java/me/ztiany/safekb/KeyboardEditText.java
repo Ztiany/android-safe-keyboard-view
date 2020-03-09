@@ -5,11 +5,8 @@ import android.content.Context;
 import android.support.v7.widget.AppCompatEditText;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.view.ActionMode;
 import android.view.Display;
 import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -20,7 +17,7 @@ import android.widget.PopupWindow;
 /**
  * 能弹出自定义键盘的EditText抽象类
  */
-public abstract class KeyboardEditText extends AppCompatEditText {
+abstract class KeyboardEditText extends AppCompatEditText {
 
     private Activity activity;
 
@@ -178,29 +175,7 @@ public abstract class KeyboardEditText extends AppCompatEditText {
      * 屏蔽EditText长按复制功能，启用后粘贴功能也会失效
      */
     public void removeCopyAndPaste() {
-        this.setCustomSelectionActionModeCallback(new ActionMode.Callback() {
-
-            @Override
-            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                return false;
-            }
-
-            @Override
-            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-                return false;
-            }
-
-            @Override
-            public void onDestroyActionMode(ActionMode mode) {
-
-            }
-
-            @Override
-            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-                return false;
-            }
-        });
-        setLongClickable(false);
+        Util.removeCopyAndPaste(this);
     }
 
 }

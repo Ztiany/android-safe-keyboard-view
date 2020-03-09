@@ -157,13 +157,6 @@ public class SystemKeyboardEditText extends KeyboardEditText {
         this.mCoreOnKeyboardActionListener.setKeyActionListener(listener);
     }
 
-    public void setFocusEnable(boolean focusEnable) {
-        this.focusEnable = focusEnable;
-        setFocusable(focusEnable);
-        setFocusableInTouchMode(focusEnable);
-        setCursorVisible(focusEnable);
-    }
-
     public void setSpareFocusChangeListener(OnFocusChangeListener focusChangeListener) {
         this.mSpareFocusChangeListener = focusChangeListener;
     }

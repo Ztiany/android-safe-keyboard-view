@@ -14,6 +14,7 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -227,6 +228,17 @@ public class KeyboardLayout extends FrameLayout {
     @SuppressLint("ClickableViewAccessibility")
     private void setListener(EditText editText) {
         Util.disableShowSoftInput(editText);
+
+        editText.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                if (editText.hasFocus()) {
+                    mCoreOnKeyboardActionListener.setEditText((EditText) v);
+                    Util.hideKeyboard(editText.getContext());
+                    setVisibility(VISIBLE);
+                }
+            }
+            return false;
+        });
 
         editText.setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
