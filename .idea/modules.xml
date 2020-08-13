@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/SafeKeyboardView.iml" filepath="$PROJECT_DIR$/SafeKeyboardView.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/easykeyboard/easykeyboard.iml" filepath="$PROJECT_DIR$/easykeyboard/easykeyboard.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SafeKeyboardView.iml" filepath="$PROJECT_DIR$/SafeKeyboardView.iml" group="SafeKeyboardView" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" group="SafeKeyboardView/app" />
+      <module fileurl="file://$PROJECT_DIR$/easykeyboard/easykeyboard.iml" filepath="$PROJECT_DIR$/easykeyboard/easykeyboard.iml" group="SafeKeyboardView/easykeyboard" />
     </modules>
   </component>
 </project>
