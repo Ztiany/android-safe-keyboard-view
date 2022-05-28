@@ -1,1 +1,2 @@
-include ':app', ':easykeyboard'
+include ':app'
+include ':lib_safekeyboard'

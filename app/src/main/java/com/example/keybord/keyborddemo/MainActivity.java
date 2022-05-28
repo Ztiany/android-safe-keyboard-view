@@ -7,16 +7,16 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import me.ztiany.safekb.KeyboardManager;
+import com.android.sdk.kb.KeyboardManager;
 
 public class MainActivity extends ListActivity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        KeyboardManager.configKeyboardMapper(new DemoKeyboardMapper());
 
-        KeyboardManager.configKeyboardMapper(new BHKeyboardMapper());
-
-        String[] type = new String[]{"SystemKeyboard", "SystemKeyBoardEditText", "Other Way"};
+        String[] type = new String[]{"SystemKeyboard", "SystemKeyBoardEditText(The Library)", "Other Way"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, type);
         setListAdapter(adapter);
     }

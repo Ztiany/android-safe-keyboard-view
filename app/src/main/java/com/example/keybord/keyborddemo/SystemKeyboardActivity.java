@@ -1,11 +1,13 @@
 package com.example.keybord.keyborddemo;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.EditText;
 
-import me.ztiany.safekb.KeyboardLayout;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.android.sdk.kb.KeyboardLayout;
+
 
 public class SystemKeyboardActivity extends AppCompatActivity {
 

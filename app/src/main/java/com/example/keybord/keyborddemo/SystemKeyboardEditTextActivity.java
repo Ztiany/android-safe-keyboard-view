@@ -1,11 +1,13 @@
 package com.example.keybord.keyborddemo;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 
-import me.ztiany.safekb.KeyBoardActionListener;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.android.sdk.kb.KeyBoardActionListener;
+
 
 /**
  * 附带EditText的 popwindow 形式弹出的键盘

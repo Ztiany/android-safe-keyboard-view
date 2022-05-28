@@ -46,7 +46,7 @@
 
     </LinearLayout>
 
-    <me.ztiany.safekb.KeyboardLayout
+    <com.android.sdk.kb.KeyboardLayout
         android:id="@+id/system_keyboard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

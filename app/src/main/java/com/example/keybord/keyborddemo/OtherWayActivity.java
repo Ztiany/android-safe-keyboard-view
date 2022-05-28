@@ -1,11 +1,12 @@
 package com.example.keybord.keyborddemo;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class OtherWayActivity extends AppCompatActivity {
 
-    CustomKeyboard mCustomKeyboard;
+    private CustomKeyboard mCustomKeyboard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
